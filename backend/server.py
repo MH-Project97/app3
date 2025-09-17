@@ -50,12 +50,14 @@ class UserLogin(BaseModel):
 class User(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     username: str
-    password: str
     email: Optional[str] = None
     workshop_name: Optional[str] = None
     workshop_id: str = Field(default_factory=lambda: str(uuid.uuid4()).replace('-', '').upper()[:18])
     role: str = "owner"
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserDB(User):
+    password: str  # Only for database storage
 
 class CustomerCreate(BaseModel):
     name: str
