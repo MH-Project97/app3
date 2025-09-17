@@ -411,7 +411,7 @@ async def generate_whatsapp_message(
         
         message_lines.extend([
             f"📝 *{session_data['session']['session_name']}*",
-            f"📅 {datetime.fromisoformat(session_data['session']['session_date']).strftime('%d %B %Y')}",
+            f"📅 {format_datetime(session_data['session']['session_date'], '%d %B %Y')}",
             ""
         ])
         
@@ -439,7 +439,7 @@ async def generate_whatsapp_message(
         for session_data in customer_summary['service_sessions']:
             message_lines.extend([
                 f"📝 *{session_data['session']['session_name']}*",
-                f"📅 {datetime.fromisoformat(session_data['session']['session_date']).strftime('%d %B %Y')}",
+                f"📅 {format_datetime(session_data['session']['session_date'], '%d %B %Y')}",
                 ""
             ])
             
