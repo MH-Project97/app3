@@ -154,6 +154,11 @@ async def register(user_data: UserCreate):
     # Create user
     user_dict = user_data.dict()
     user_dict['password'] = hashed_password.decode('utf-8')
+    
+    # Remove None workshop_id to let default factory work
+    if user_dict.get('workshop_id') is None:
+        user_dict.pop('workshop_id', None)
+    
     user_obj = User(**user_dict)
     
     # If employee, validate workshop_id
