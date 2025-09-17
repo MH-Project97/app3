@@ -206,10 +206,11 @@ async def login(user_credentials: UserLogin):
         data={"sub": user['username']}, expires_delta=access_token_expires
     )
     
-    # Return user without password
-    user_response = {k: v for k, v in user.items() if k != 'password'}
+    # Create User object without password for response
+    user_response_dict = {k: v for k, v in user.items() if k not in ['password', '_id']}
+    user_response = User(**user_response_dict)
     
-    return {"access_token": access_token, "token_type": "bearer", "user": user_response}
+    return {"access_token": access_token, "token_type": "bearer", "user": user_response.dict()}
 
 @api_router.get("/auth/me")
 async def get_me(current_user: User = Depends(get_current_user)):
