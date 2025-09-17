@@ -141,7 +141,9 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     if user is None:
         raise credentials_exception
     
-    return User(**user)
+    # Create User object without password and _id
+    user_dict = {k: v for k, v in user.items() if k not in ['password', '_id']}
+    return User(**user_dict)
 
 # Auth Endpoints
 @api_router.post("/auth/register")
