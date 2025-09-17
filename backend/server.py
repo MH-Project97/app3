@@ -154,15 +154,12 @@ async def register(user_data: UserCreate):
     # Hash password
     hashed_password = bcrypt.hashpw(user_data.password.encode('utf-8'), bcrypt.gensalt())
     
-    # Create user
+    # Create user dictionary for database
     user_dict = user_data.dict()
     user_dict['password'] = hashed_password.decode('utf-8')
     
-    # Remove None workshop_id to let default factory work
-    if user_dict.get('workshop_id') is None:
-        user_dict.pop('workshop_id', None)
-    
-    user_obj = User(**user_dict)
+    # Create UserDB object for database with password
+    user_db = UserDB(**user_dict)
     
     # If employee, validate workshop_id
     if user_data.role == "employee":
@@ -174,23 +171,24 @@ async def register(user_data: UserCreate):
         if not workshop_owner:
             raise HTTPException(status_code=400, detail="Invalid workshop ID")
         
-        user_obj.workshop_id = user_data.workshop_id
-        user_obj.workshop_name = workshop_owner.get('workshop_name')
+        user_db.workshop_id = user_data.workshop_id
+        user_db.workshop_name = workshop_owner.get('workshop_name')
     
     # Save to database
-    await db.users.insert_one(user_obj.dict())
+    await db.users.insert_one(user_db.dict())
     
     # Create access token
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user_obj.username}, expires_delta=access_token_expires
+        data={"sub": user_db.username}, expires_delta=access_token_expires
     )
     
-    # Return user without password
-    user_response = user_obj.dict()
-    user_response.pop('password', None)
+    # Create User object without password for response  
+    user_response_dict = user_db.dict()
+    user_response_dict.pop('password', None)
+    user_response = User(**user_response_dict)
     
-    return {"access_token": access_token, "token_type": "bearer", "user": user_response}
+    return {"access_token": access_token, "token_type": "bearer", "user": user_response.dict()}
 
 @api_router.post("/auth/login")
 async def login(user_credentials: UserLogin):
