@@ -367,6 +367,16 @@ async def get_dashboard(current_user: User = Depends(get_current_user)):
     
     return {"customers": customers_summary}
 
+# Helper function for datetime formatting
+def format_datetime(dt_obj, format_str):
+    """Format datetime object or string to specified format"""
+    if isinstance(dt_obj, datetime):
+        return dt_obj.strftime(format_str)
+    elif isinstance(dt_obj, str):
+        return datetime.fromisoformat(dt_obj).strftime(format_str)
+    else:
+        return str(dt_obj)
+
 # WhatsApp Integration
 @api_router.get("/customers/{customer_id}/whatsapp-message")
 async def generate_whatsapp_message(
