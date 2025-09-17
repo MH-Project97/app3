@@ -267,10 +267,15 @@ async def get_customer_summary(customer_id: str, current_user: User = Depends(ge
         
         session_remaining_debt = session_services_total - session_payments_total
         
+        # Convert to model objects to avoid ObjectId serialization issues
+        session_obj = ServiceSession(**session)
+        service_objs = [Service(**service) for service in services]
+        payment_objs = [Payment(**payment) for payment in payments]
+        
         service_sessions_summary.append({
-            "session": session,
-            "services": services,
-            "payments": payments,
+            "session": session_obj.dict(),
+            "services": [service.dict() for service in service_objs],
+            "payments": [payment.dict() for payment in payment_objs],
             "services_total": session_services_total,
             "payments_total": session_payments_total,
             "remaining_debt": session_remaining_debt
