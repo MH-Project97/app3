@@ -287,8 +287,11 @@ async def get_customer_summary(customer_id: str, current_user: User = Depends(ge
     # Calculate remaining debt
     remaining_debt = total_services_amount - total_payments_amount
     
+    # Convert customer to model object
+    customer_obj = Customer(**customer)
+    
     return {
-        "customer": customer,
+        "customer": customer_obj.dict(),
         "service_sessions": service_sessions_summary,
         "total_services_amount": total_services_amount,
         "total_payments_amount": total_payments_amount,
