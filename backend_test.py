@@ -19,7 +19,7 @@ class WorkshopAPITester:
         self.session = requests.Session()
         self.auth_token = None
         self.test_user_data = {
-            "username": "workshop_owner_test",
+            "username": f"workshop_owner_test_{int(time.time())}",
             "password": "SecurePass123!",
             "email": "owner@workshop.com",
             "workshop_name": "AutoFix Workshop",
