@@ -366,8 +366,11 @@ async def get_dashboard(current_user: User = Depends(get_current_user)):
         total_payments_amount = sum(payment['amount'] for payment in payments)
         total_debt = total_services_amount - total_payments_amount
         
+        # Convert customer to model object
+        customer_obj = Customer(**customer)
+        
         customers_summary.append({
-            "customer": customer,
+            "customer": customer_obj.dict(),
             "total_debt": total_debt,
             "total_services": len(services),
             "total_payments": len(payments),
