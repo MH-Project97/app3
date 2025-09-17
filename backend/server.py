@@ -50,6 +50,7 @@ class UserLogin(BaseModel):
 class User(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     username: str
+    password: str
     email: Optional[str] = None
     workshop_name: Optional[str] = None
     workshop_id: str = Field(default_factory=lambda: str(uuid.uuid4()).replace('-', '').upper()[:18])
