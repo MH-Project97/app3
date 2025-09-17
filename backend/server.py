@@ -428,7 +428,7 @@ async def generate_whatsapp_message(
             message_lines.append("💳 *PEMBAYARAN:*")
             for payment in session_data['payments']:
                 desc = f" ({payment['description']})" if payment['description'] else ""
-                payment_date = datetime.fromisoformat(payment['payment_date']).strftime('%d/%m/%Y')
+                payment_date = format_datetime(payment['payment_date'], '%d/%m/%Y')
                 message_lines.append(f"• {payment_date} - Rp {payment['amount']:,.0f}{desc}")
             message_lines.append("")
         
@@ -456,7 +456,7 @@ async def generate_whatsapp_message(
                 message_lines.append("💳 *PEMBAYARAN:*")
                 for payment in session_data['payments']:
                     desc = f" ({payment['description']})" if payment['description'] else ""
-                    payment_date = datetime.fromisoformat(payment['payment_date']).strftime('%d/%m/%Y')
+                    payment_date = format_datetime(payment['payment_date'], '%d/%m/%Y')
                     message_lines.append(f"• {payment_date} - Rp {payment['amount']:,.0f}{desc}")
                 message_lines.append("")
             
